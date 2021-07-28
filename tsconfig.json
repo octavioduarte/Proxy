@@ -18,5 +18,6 @@
     "paths": {
       "@/*": ["*"]
     }
-  }
+  },
+  "exclude": ["commitlint.config.js"]
 }
