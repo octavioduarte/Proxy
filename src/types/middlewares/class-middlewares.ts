@@ -1,6 +1,6 @@
 import { Request } from "express";
-import { MiddlewareError } from "./error";
+import { HttpResponse } from "../http";
 
 export interface ClassMiddlewares {
-    handle: (req: Request) => Promise<MiddlewareError>
+    handle: (req: Request) => Promise<HttpResponse>
 }

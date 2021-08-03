@@ -1,26 +1,21 @@
-import { ClassMiddlewares } from "@/types"
 import { NextFunction, Request, Response } from "express"
+import { ClassMiddlewares } from "@/types"
+import { internalError } from "@/helpers/http"
+
 
 
 export const loadMiddleware = (middlewareInstance: ClassMiddlewares) => {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return async (req: Request, res: Response, next: NextFunction): Promise<Response<any, Record<string, any>>> => {
         try {
             const error = await middlewareInstance.handle(req)
             if (error) {
-                const { status, message } = error
-                return res.status(status)
-                    .send({
-                        message,
-                        has_error: true
-                    })
+                const { data, has_error, statusCode } = error
+                return res.status(statusCode).json({ has_error, data })
             }
             next()
         } catch {
-            return res.status(500)
-                .send({
-                    message: 'Internal error',
-                    has_error: true
-                })
+            const { data, has_error, statusCode } = internalError()
+            res.status(statusCode).send({ has_error, data })
         }
     }
 }

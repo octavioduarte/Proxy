@@ -1,8 +1,9 @@
-import { ClassMiddlewares, MiddlewareError } from '@/types'
+import { ClassMiddlewares, HttpResponse } from '@/types'
+import { internalError } from '@/helpers/http'
 import { Request } from 'express'
 
 export class LoadAPIS implements ClassMiddlewares {
-    async handle(req: Request): Promise<MiddlewareError> {
+    async handle(req: Request): Promise<HttpResponse> {
         try {
             req.allServers = await new Promise((resolve, _reject) => {
                 resolve([
@@ -11,10 +12,7 @@ export class LoadAPIS implements ClassMiddlewares {
                 ])
             })
         } catch {
-            return {
-                message: 'Internal Error',
-                status: 500
-            }
+            return internalError()
         }
     }
 }
