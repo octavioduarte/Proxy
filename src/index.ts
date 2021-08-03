@@ -1,6 +1,7 @@
 import { Express, Request, Response } from 'express'
 import { APIType } from './types'
 import { env } from '@/config/env'
+import { HandleRequestController } from '@/presentation'
 import { loadAppSettings, loadMiddleware, LoadAPIS, LoadRoute } from '@/middlewares'
 
 
@@ -12,7 +13,12 @@ env.HTTP_METHODS.forEach((method: keyof Express) => {
         loadMiddleware(new LoadAPIS()),
         loadMiddleware(new LoadRoute()),
         async (req: Request, res: Response) => {
-            res.json({ "api-found": req.api, body: req.body })
+            const handleRequestController = new HandleRequestController()
+            const { data, statusCode, has_error } = await handleRequestController.handle(req.api.url, req.method, req.body, "")
+
+            res
+                .status(statusCode)
+                .json({ data, has_error })
         }
     )
 })
