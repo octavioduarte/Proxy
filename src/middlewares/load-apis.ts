@@ -1,6 +1,6 @@
-import { ClassMiddlewares, HttpResponse } from '@/types'
-import { internalError } from '@/helpers/http'
 import { Request } from 'express'
+import { internalError } from '@/helpers'
+import { ClassMiddlewares, HttpResponse } from '@/types'
 
 export class LoadAPIS implements ClassMiddlewares {
     async handle(req: Request): Promise<HttpResponse> {

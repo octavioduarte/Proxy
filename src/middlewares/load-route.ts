@@ -1,6 +1,6 @@
-import { internalError, notFound } from "@/helpers/http";
-import { APIType, ClassMiddlewares, HttpResponse } from "@/types";
 import { Request } from "express";
+import { internalError, notFound } from "@/helpers";
+import { APIType, ClassMiddlewares, HttpResponse } from "@/types";
 
 export class LoadRoute implements ClassMiddlewares {
     async handle(req: Request): Promise<HttpResponse> {

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express"
+import { internalError } from "@/helpers"
 import { ClassMiddlewares } from "@/types"
-import { internalError } from "@/helpers/http"
 
 
 
