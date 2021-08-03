@@ -37,3 +37,9 @@ export const ok = (data: any): HttpResponse => ({
     has_error: false,
     data
 })
+
+export const notFound = (): HttpResponse => ({
+    statusCode: HTTPStatus.NOT_FOUND,
+    has_error: true,
+    data: 'Route not found'
+})
