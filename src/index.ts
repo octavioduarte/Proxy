@@ -1,9 +1,10 @@
-import express, { Express, Request, Response } from 'express'
-import { loadMiddleware, LoadAPIS, LoadRoute } from '@/middlewares'
-import { env } from '@/config/env'
+import { Express, Request, Response } from 'express'
 import { APIType } from './types'
+import { env } from '@/config/env'
+import { loadAppSettings, loadMiddleware, LoadAPIS, LoadRoute } from '@/middlewares'
 
-const app = express()
+
+const app = loadAppSettings()
 
 env.HTTP_METHODS.forEach((method: keyof Express) => {
     app[method](
@@ -11,8 +12,7 @@ env.HTTP_METHODS.forEach((method: keyof Express) => {
         loadMiddleware(new LoadAPIS()),
         loadMiddleware(new LoadRoute()),
         async (req: Request, res: Response) => {
-            console.log(req.body)
-            res.json({ "api-found": req.api })
+            res.json({ "api-found": req.api, body: req.body })
         }
     )
 })
