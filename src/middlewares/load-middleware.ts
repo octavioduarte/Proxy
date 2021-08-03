@@ -8,11 +8,19 @@ export const loadMiddleware = (middlewareInstance: ClassMiddlewares) => {
             const error = await middlewareInstance.handle(req)
             if (error) {
                 const { status, message } = error
-                return res.status(status).send(message)
+                return res.status(status)
+                    .send({
+                        message,
+                        has_error: true
+                    })
             }
             next()
         } catch {
-            return res.status(500).send({ message: 'Internal error' })
+            return res.status(500)
+                .send({
+                    message: 'Internal error',
+                    has_error: true
+                })
         }
     }
 }
