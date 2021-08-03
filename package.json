@@ -21,6 +21,7 @@
     "express": "^4.17.1"
   },
   "scripts": {
-    "dev": "ts-node -r tsconfig-paths/register src/index.ts"
+    "dev": "ts-node -r tsconfig-paths/register src/index.ts",
+    "debug": "nodemon --watch 'src/' --exec 'yarn dev' -e ts"
   }
 }
