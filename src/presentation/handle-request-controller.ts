@@ -14,8 +14,8 @@ export class HandleRequestController implements Controller {
             })
 
             return ok(data)
-        } catch {
-            return internalError()
+        } catch (error){
+            return internalError(error)
         }
     }
 }

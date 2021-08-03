@@ -13,8 +13,8 @@ export const loadMiddleware = (middlewareInstance: ClassMiddlewares) => {
                 return res.status(statusCode).json({ has_error, data })
             }
             next()
-        } catch {
-            const { data, has_error, statusCode } = internalError()
+        } catch (error){
+            const { data, has_error, statusCode } = internalError(error)
             res.status(statusCode).send({ has_error, data })
         }
     }

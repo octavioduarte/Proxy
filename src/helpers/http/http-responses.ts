@@ -20,10 +20,10 @@ export const unauthorized = (): HttpResponse => ({
     data: 'Unauthorized'
 })
 
-export const internalError = (): HttpResponse => ({
+export const internalError = (error: Error): HttpResponse => ({
     statusCode: HTTPStatus.INTERNAL_ERROR,
     has_error: true,
-    data: 'Internal Error'
+    data: `Internal Error - ${error.stack}`,
 })
 
 export const noContent = (): HttpResponse => ({

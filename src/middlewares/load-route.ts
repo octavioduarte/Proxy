@@ -6,7 +6,7 @@ export class LoadRoute implements ClassMiddlewares {
     async handle(req: Request): Promise<HttpResponse> {
         try {
             const prefix: string = req.url.split("/")[1]
-            const apiProps: APIType = req.allServers.find(apis => apis.prefix === prefix)
+            const apiProps: APIType = req.allServers.find(apis => apis.prefix === prefix && apis.enabled)
 
             if (!apiProps) {
                 return notFound()
@@ -20,8 +20,8 @@ export class LoadRoute implements ClassMiddlewares {
 
             req.api = { ...apiProps, url: `${apiProps.url}/${slicesUrl}` }
 
-        } catch {
-            return internalError()
+        } catch (error) {
+            return internalError(error)
         }
     }
 }
