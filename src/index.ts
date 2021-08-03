@@ -1,5 +1,5 @@
 import { Express, Request, Response } from 'express'
-import { APIType } from './types'
+import { APIType, HttpResponse } from './types'
 import { env } from '@/config/env'
 import { HandleRequestController } from '@/presentation'
 import { loadAppSettings, loadMiddleware, LoadAPIS, LoadRoute } from '@/middlewares'
@@ -13,17 +13,16 @@ env.HTTP_METHODS.forEach((method: keyof Express) => {
         loadMiddleware(new LoadAPIS()),
         loadMiddleware(new LoadRoute()),
         async (req: Request, res: Response) => {
-            const handleRequestController = new HandleRequestController()
-            const { data, statusCode, has_error } = await handleRequestController.handle(req.api.url, req.method, req.body, "")
 
-            res
-                .status(statusCode)
-                .json({ data, has_error })
+            const { body, headers, method, api } = req
+
+            const handleRequestController = new HandleRequestController()
+            const httpResponse: HttpResponse = await handleRequestController.handle({ body, headers, method, url: api.url })
+
+            res.status(httpResponse.statusCode).json({ data: httpResponse.data, has_error: httpResponse.has_error })
         }
     )
 })
-
-app.listen(env.HTTP_PORT, () => { console.log(`Proxy running at port: ${env.HTTP_PORT}`) })
 
 
 declare global {
@@ -34,3 +33,5 @@ declare global {
         }
     }
 }
+
+app.listen(env.HTTP_PORT, () => { console.log(`Proxy running at port: ${env.HTTP_PORT}`) })

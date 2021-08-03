@@ -1,8 +1,10 @@
 import axios, { Method } from 'axios'
 import { internalError, ok } from "@/helpers";
+import { Controller, HttpResponse } from '@/types';
 
-export class HandleRequestController {
-    async handle(url: string, method: string, body: any, headers: any) {
+export class HandleRequestController implements Controller {
+    async handle(props: HandleRequestController.Props): Promise<HttpResponse> {
+        const { body, url, method, headers } = props
         try {
             const { data } = await axios({
                 url,
@@ -15,5 +17,14 @@ export class HandleRequestController {
         } catch {
             return internalError()
         }
+    }
+}
+
+export namespace HandleRequestController {
+    export type Props = {
+        body: any
+        headers: any
+        method: string
+        url: string
     }
 }
