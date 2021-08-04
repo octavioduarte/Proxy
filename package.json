@@ -21,7 +21,9 @@
     "express": "^4.17.1"
   },
   "scripts": {
+    "debug": "nodemon --watch 'src/' --exec 'yarn dev' -e ts",
     "dev": "ts-node -r tsconfig-paths/register src/index.ts",
-    "debug": "nodemon --watch 'src/' --exec 'yarn dev' -e ts"
+    "build": "rimraf dist && tsc",
+    "start": "node -r ./tsconfig-paths-bootstrap.js dist/index.js"
   }
 }
