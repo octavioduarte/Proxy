@@ -1,16 +1,18 @@
 import { Request } from 'express'
 import { internalError } from '@/helpers'
-import { ClassMiddlewares, HttpResponse } from '@/types'
+import { APIType, ClassMiddlewares, HttpResponse } from '@/types'
+import { MongoHelper } from '@/db'
+import { env } from '@/config/env'
 
 export class LoadAPIS implements ClassMiddlewares {
     async handle(req: Request): Promise<HttpResponse> {
         try {
-            req.allServers = await new Promise((resolve, _reject) => {
-                resolve([
-                    { authenticated: true, enabled: true, key: "any_hash_git", prefix: 'github', url: 'https://api.github.com' },
-                    { authenticated: true, enabled: true, key: "any_hash_agify", prefix: 'agify', url: 'https://api.agify.io' }
-                ])
-            })
+            const mongoHelper = new MongoHelper()
+            await mongoHelper.connect(env.DB.MONGO_URI)
+            const serversRulesCollection = await mongoHelper.getCollection('servers-rules')
+                        
+            req.allServers = await serversRulesCollection.find().toArray() as unknown as APIType[]
+            await mongoHelper.disconnect()
         } catch (error) {
             return internalError(error)
         }
