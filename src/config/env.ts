@@ -8,6 +8,7 @@ export const env = {
     DB: {
         MONGO_URI: process.env.MONGO_URI,
         REDIS_PORT: process.env.REDIS_PORT,
-        REDIS_HOST: process.env.REDIS_HOST
+        REDIS_HOST: process.env.REDIS_HOST,
+        SERVERS_RULES_KEY: "servers_rules"
     }
 }
