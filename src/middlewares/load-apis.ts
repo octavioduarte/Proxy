@@ -11,7 +11,9 @@ export class LoadAPIS implements ClassMiddlewares {
             const redisHelper = new RedisHelper()
             const serversRules: APIType[] = await redisHelper.get(env.DB.SERVERS_RULES_KEY) as APIType[]
 
-            if (!serversRules) {
+            if (serversRules) {
+                req.allServers = serversRules
+            } else {
                 const mongoHelper = new MongoHelper()
                 await mongoHelper.connect(env.DB.MONGO_URI)
                 const serversRulesCollection = await mongoHelper.getCollection('servers-rules')
@@ -20,9 +22,8 @@ export class LoadAPIS implements ClassMiddlewares {
                 redisHelper.set(env.DB.SERVERS_RULES_KEY, JSON.stringify(result))
                 req.allServers = result as unknown as APIType[]
                 await mongoHelper.disconnect()
-            } else {
-                req.allServers = serversRules
             }
+            
         } catch (error) {
             return internalError(error)
         }
