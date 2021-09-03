@@ -3,8 +3,11 @@ import { Collection, MongoClient } from 'mongodb'
 export class MongoHelper {
     client: MongoClient | null = null
 
-    async connect(url: string): Promise<void> {
-        this.client = await MongoClient.connect(url)
+    async connect(uri: string): Promise<void> {
+        if (!uri) {
+            throw new Error('Connection string not loaded')
+        }
+        this.client = await MongoClient.connect(uri)
     }
 
     async disconnect(): Promise<void> {
