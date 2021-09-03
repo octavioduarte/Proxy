@@ -15,15 +15,12 @@ export class LoadAPIS implements ClassMiddlewares {
                 req.allServers = serversRules
             } else {
                 const mongoHelper = new MongoHelper()
-                await mongoHelper.connect(env.DB.MONGO_URI)
                 const serversRulesCollection = await mongoHelper.getCollection('servers-rules')
 
                 const result = await serversRulesCollection.find().toArray()
                 redisHelper.set(env.DB.SERVERS_RULES_KEY, JSON.stringify(result))
                 req.allServers = result as unknown as APIType[]
-                await mongoHelper.disconnect()
             }
-            
         } catch (error) {
             return internalError(error)
         }
