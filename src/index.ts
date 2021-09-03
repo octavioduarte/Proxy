@@ -3,7 +3,7 @@ import { APIType, HttpResponse } from './types'
 import { env } from '@/config/env'
 import { HandleRequestController } from '@/presentation'
 import { loadAppSettings, loadMiddleware, LoadAPIS, LoadRoute } from '@/middlewares'
-
+import { MongoHelper } from '@/db'
 
 const app = loadAppSettings()
 
@@ -34,4 +34,18 @@ declare global {
     }
 }
 
-app.listen(env.HTTP_PORT, () => { console.log(`Proxy running at port: ${env.HTTP_PORT}`) })
+
+new MongoHelper()
+    .connect(env.DB.MONGO_URI)
+    .then(() => {
+        console.info("Database connection established")
+    })
+    .then(() => {
+        app.listen(env.HTTP_PORT, () => {
+            console.info(`Proxy running at port: ${env.HTTP_PORT}`)
+        })
+    })
+    .catch((error) => {
+        console.error(`Database connection failed: ${error}`)
+    })
+
