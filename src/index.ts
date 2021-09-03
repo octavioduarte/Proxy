@@ -7,22 +7,23 @@ import { MongoHelper } from '@/db'
 
 const app = loadAppSettings()
 
-env.HTTP_METHODS.forEach((method: keyof Express) => {
-    app[method](
-        "*",
-        loadMiddleware(new LoadAPIS()),
-        loadMiddleware(new LoadRoute()),
-        async (req: Request, res: Response) => {
+new Array("get", "post", "delete", "patch", "put")
+    .forEach((method: keyof Express) => {
+        app[method](
+            "*",
+            loadMiddleware(new LoadAPIS()),
+            loadMiddleware(new LoadRoute()),
+            async (req: Request, res: Response) => {
 
-            const { body, headers, method, api } = req
+                const { body, headers, method, api } = req
 
-            const handleRequestController = new HandleRequestController()
-            const httpResponse: HttpResponse = await handleRequestController.handle({ body, headers, method, url: api.url })
+                const handleRequestController = new HandleRequestController()
+                const httpResponse: HttpResponse = await handleRequestController.handle({ body, headers, method, url: api.url })
 
-            res.status(httpResponse.statusCode).json({ data: httpResponse.data, has_error: httpResponse.has_error })
-        }
-    )
-})
+                res.status(httpResponse.statusCode).json({ data: httpResponse.data, has_error: httpResponse.has_error })
+            }
+        )
+    })
 
 
 declare global {
